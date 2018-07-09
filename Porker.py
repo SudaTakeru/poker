@@ -9,44 +9,81 @@ class Porker:
     def __init__(self):
         self.p=0
         
+        
+    def judge(self,a):
+        #a=list(ai)
+        #ai=[result,strength,num] (return:hand,i)
+        strength=list(range(len(a)))
+        for i in range(len(a)):
+            strength[i]=a[i][1]
+        ind=max(strength)
+        count=0
+        ind2=[]
+        for i in range(len(a)):
+            if ind==strength[i]:
+                count=count+1
+                ind2.append(i)
+        if count>1:
+            s = a[ind2[0]][1]
+            if s>6 or s==5 or s==4 or s==2:
+                k=list(range(len(ind2)))
+                for i in ind2:
+                    mink=max(k)
+                    k[i]=a[i][2]
+                    if mink==k[i]:
+                        ind2.append(i)
+                    else:
+                        ind2=[k.index(max(k))]
+        return ind2
+        
     def hand(self,x):
         [res,num]=self.straightflash(x)
+        strength=9
         if res==True:
             result='straightflash'
         else:
+            strength=strength-1
             [res,num]=self.fourcard(x)
             if res==True:
                 result='fourcard'
             else:
+                strength=strength-1
                 [res,num]=self.fullhouse(x)
                 if res==True:
                     result='fullhouse'
                 else:
+                    strength=strength-1
                     [res,num]=self.flash(x)
                     if res==True:
                         result='flash'
                     else:
+                        strength=strength-1
                         [res,num]=self.straight(x)
                         if res==True:
                             result='straight'
                         else:
+                            strength=strength-1
                             [res,num]=self.Threecard(x)
                             if res==True:
                                 result='Threecard'
                             else:
+                                strength=strength-1
                                 [res,num]=self.TwoPair(x)
                                 if res==True:
                                     result='TwoPair'
                                 else:
+                                    strength=strength-1
                                     [res,num]=self.Pair(x)
                                     if res==True:
                                         result='Pair'
                                     else:
+                                        strength=strength-1
                                         result='garbage'
                                         num=list(range(len(x)))
                                         for i in range(len(x)):
                                             num[i]=x[i][1]
-        return [result,num]
+                                        num.sort()
+        return [result,strength,num]
     
     def straightflash(self,x):
         result=False
@@ -133,8 +170,6 @@ class Porker:
                     number=temp
                     result=True
                     break
-                
-                
         return [result,number]
 
     def TwoPair(self,x):
