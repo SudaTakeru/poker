@@ -27,14 +27,34 @@ class Porker:
             s = a[ind2[0]][1]
             if s>6 or s==5 or s==4 or s==2:
                 k=list(range(len(ind2)))
-                for i in ind2:
-                    mink=max(k)
-                    k[i]=a[i][2]
-                    if mink==k[i]:
-                        ind2.append(i)
-                    else:
-                        ind2=[k.index(max(k))]
-        return ind2
+                for i in range(len(ind2)):
+                    k[i]=a[ind2[i]][2]
+                ind30=[i for i, x in enumerate(k) if x == max(k)]
+                ind3=[]
+                for i in range(len(ind30)):
+                    ind3.append(ind2[ind30[i]])
+            elif s==3:
+                k=list(range(len(ind2)))
+                for i in range(len(ind2)):
+                    k[i]=max(a[ind2[i]][2])
+                ind30=[i for i, x in enumerate(k) if x == max(k)]
+                if len(ind30)==1:
+                    ind3=ind2[ind30[0]]
+                else:
+                    for i in range(len(ind30)):
+                        if type(a[ind30[i]][2])==int:
+                            k[i]=a[ind30[i]][2]
+                        else:
+                            k[i]=min(a[ind30[i]][2])
+                    ind30=[i for i, x in enumerate(k) if x == max(k)]
+                    ind3=[]
+                    for i in range(len(ind30)):
+                        ind3.append(ind2[ind30[i]])
+            else:
+                ind3=ind2    
+        else:
+            ind3=ind2[0]
+        return ind3
         
     def hand(self,x):
         [res,num]=self.straightflash(x)
@@ -174,7 +194,7 @@ class Porker:
 
     def TwoPair(self,x):
         result=False
-        number=list((0,0,0))
+        number=list((0,0))
         k=0
         for i in range(len(x)-1):
             temp=x[i][1]
@@ -185,7 +205,7 @@ class Porker:
                 if temp==cards[ii][1]:
                     count=count+1
                 if count==2:
-                    if not temp == number[0]:
+                    if (k==0) or ((not temp == number[0]) and k==1):
                         number[k]=temp
                         k=k+1
                         if k==2:
